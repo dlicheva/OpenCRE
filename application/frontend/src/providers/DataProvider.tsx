@@ -59,9 +59,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
       (link) =>
         link.document && link.document.doctype === 'Standard' && !keyPath.includes(getStoreKey(link.document))
     );
-    if (standards.length) {
-      storedDoc.links = [...creLinks, ...standards];
-    }
+    storedDoc.links = [...creLinks, ...standards];
 
     return storedDoc;
   };
