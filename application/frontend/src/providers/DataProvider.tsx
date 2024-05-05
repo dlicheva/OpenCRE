@@ -44,7 +44,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
     let creLinks = initialLinks.filter(
       (x) => x.document && !keyPath.includes(getStoreKey(x.document)) && getStoreKey(x.document) in dataStore
     );
-
+    //tree leaf
     if (!creLinks.length) {
       storedDoc.links = [];
       return storedDoc;
@@ -52,16 +52,13 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
 
     //continue traversing the tree
     creLinks = creLinks.map((x) => ({ ltype: x.ltype, document: buildTree(x.document, keyPath) }));
-    storedDoc.links = [...creLinks];
 
-    //attach Standards to the CREs
-    const standards = initialLinks.filter(
+    //attach Standard links to the CREs
+    const standardLinks = initialLinks.filter(
       (link) =>
         link.document && link.document.doctype === 'Standard' && !keyPath.includes(getStoreKey(link.document))
     );
-    if (standards.length) {
-      storedDoc.standards = [...standards];
-    }
+    storedDoc.links = [...creLinks, ...standardLinks];
 
     return storedDoc;
   };

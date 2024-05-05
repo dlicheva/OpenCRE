@@ -13,26 +13,7 @@ export const Explorer = () => {
   const [filter, setFilter] = useState('');
   const [filteredTree, setFilteredTree] = useState<TreeDocument[]>();
 
-  const filterFunc = (doc: TreeDocument, term: string) =>
-    doc?.displayName?.toLowerCase().includes(term) || doc?.name?.toLowerCase().includes(term);
-
-  const recursiveFilter = (doc: TreeDocument, term: string) => {
-    if (doc.links) {
-      const filteredLinks: LinkedTreeDocument[] = [];
-      doc.links.forEach((x) => {
-        const docu = recursiveFilter(x.document, term);
-        if (docu) {
-          filteredLinks.push({ ltype: x.ltype, document: docu });
-        }
-      });
-      doc.links = filteredLinks;
-    }
-    if (filterFunc(doc, term) || doc.links?.length) {
-      return doc;
-    }
-    return null;
-  };
-
+  const filterFunc = (doc: TreeDocument, term: string) => doc?.displayName?.toLowerCase().includes(term);
   const applyHighlight = (text, term) => {
     if (!term) return text;
     let index = text.toLowerCase().indexOf(term);
@@ -63,13 +44,11 @@ export const Explorer = () => {
     if (dataTree.length) {
       const treeCopy = structuredClone(dataTree);
       const filTree: TreeDocument[] = [];
-      treeCopy
-        .map((x) => recursiveFilter(x, filter))
-        .forEach((x) => {
-          if (x) {
-            filTree.push(x);
-          }
-        });
+      treeCopy.forEach((x) => {
+        if (x) {
+          filTree.push(x);
+        }
+      });
       setFilteredTree(filTree);
     }
   }, [filter, dataTree, setFilteredTree]);
@@ -79,7 +58,7 @@ export const Explorer = () => {
       return <></>;
     }
     const contains = item.links.filter((x) => x.ltype === 'Contains');
-    const linkedTo = item.standards ?? [];
+    const linkedTo = item.links.filter((x) => x.ltype === 'Linked To');
 
     const creCode = item.id;
     const creName = item.displayName.split(' : ').pop();
