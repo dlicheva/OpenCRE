@@ -28,7 +28,7 @@ main#explorer-content {
     }
     li {
       padding: 0 8px;
-      +li {
+      + li {
         border-left: 1px solid #b1b0b0;
       }
     }
@@ -36,33 +36,7 @@ main#explorer-content {
 
   .list {
     padding: 0;
-  }
-
-  .item {
-    border-top: 1px dotted lightgrey;
-    border-left: 6px solid lightgrey;
-    margin: 4px 4px 4px 40px;
-    background-color: rgba(200, 200, 200, 0.2);
-    vertical-align: middle;
-
-    .header {
-      margin-left: 5px;
-      overflow: hidden;
-      white-space: nowrap;
-      display: flex;
-      align-items: center;
-
-      a {
-        font-size: 120%;
-        line-height: 30px;
-        font-weight: bold;
-      }
-
-      .cre-code {
-        margin-right: 4px;
-        color: grey;
-      }
-    }
+    width: 100%;
   }
 
   .arrow {
@@ -77,6 +51,63 @@ main#explorer-content {
 
     &:hover {
       cursor: pointer;
+    }
+  }
+
+  .item {
+    border-top: 1px dotted lightgrey;
+    border-left: 6px solid lightgrey;
+    margin: 4px 4px 4px 40px;
+    background-color: rgba(200, 200, 200, 0.2);
+    vertical-align: middle;
+
+    .content {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .header {
+      margin-left: 5px;
+      overflow: hidden;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      vertical-align: middle;
+
+      > a {
+        font-size: 120%;
+        line-height: 30px;
+        font-weight: bold;
+        max-width: 100%;
+        white-space: normal;
+      }
+
+      .cre-code {
+        margin-right: 4px;
+        color: grey;
+      }
+    }
+
+    .description {
+      margin-left: 20px;
+    }
+  }
+
+  .tags {
+    display: flex;
+    gap: 4px;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+
+    .ui.label {
+      border: 1px solid #4183c4;
+      text-shadow: none;
+    }
+
+    a:hover .label {
+      background: #4183c4;
+      color: white;
     }
   }
 

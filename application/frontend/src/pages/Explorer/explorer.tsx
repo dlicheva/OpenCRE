@@ -12,8 +12,8 @@ export const Explorer = () => {
   const { dataLoading, dataTree } = useDataStore();
   const [filter, setFilter] = useState('');
   const [filteredTree, setFilteredTree] = useState<TreeDocument[]>();
-  const [collapsedItems, setCollapsedItems] = useState<string[]>([]);
 
+  const filterFunc = (doc: TreeDocument, term: string) => doc?.displayName?.toLowerCase().includes(term);
   const applyHighlight = (text, term) => {
     if (!term) return text;
     let index = text.toLowerCase().indexOf(term);
@@ -29,26 +29,9 @@ export const Explorer = () => {
     return text;
   };
 
-  const filterFunc = (doc: TreeDocument, term: string) => doc?.displayName?.toLowerCase().includes(term);
-  const recursiveFilter = (doc: TreeDocument, term: string) => {
-    if (doc.links) {
-      const filteredLinks: LinkedTreeDocument[] = [];
-      doc.links.forEach((x) => {
-        const docu = recursiveFilter(x.document, term);
-        if (docu) {
-          filteredLinks.push({ ltype: x.ltype, document: docu });
-        }
-      });
-      doc.links = filteredLinks;
-    }
-    if (filterFunc(doc, term) || doc.links?.length) {
-      return doc;
-    }
-    return null;
-  };
-
+  //accordion
+  const [collapsedItems, setCollapsedItems] = useState<string[]>([]);
   const isCollapsed = (id: string) => collapsedItems.includes(id);
-
   const toggleItem = (id: string) => {
     if (collapsedItems.includes(id)) {
       setCollapsedItems(collapsedItems.filter((itemId) => itemId !== id));
@@ -61,13 +44,11 @@ export const Explorer = () => {
     if (dataTree.length) {
       const treeCopy = structuredClone(dataTree);
       const filTree: TreeDocument[] = [];
-      treeCopy
-        .map((x) => recursiveFilter(x, filter))
-        .forEach((x) => {
-          if (x) {
-            filTree.push(x);
-          }
-        });
+      treeCopy.forEach((x) => {
+        if (x) {
+          filTree.push(x);
+        }
+      });
       setFilteredTree(filTree);
     }
   }, [filter, dataTree, setFilteredTree]);
@@ -100,7 +81,7 @@ export const Explorer = () => {
           </List.Header>
           {linkedTo.length > 0 && (
             <List.Description>
-              <Label.Group size="tiny" tag>
+              <Label.Group size="small" className="tags">
                 {[...new Set(linkedTo.map((x: LinkedTreeDocument) => x.document.name))]
                   .sort()
                   .map((x: string) => (
