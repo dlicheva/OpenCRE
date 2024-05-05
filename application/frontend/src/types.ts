@@ -43,6 +43,7 @@ export interface TreeDocument extends Document {
   displayName: string;
   url: string;
   links: LinkedTreeDocument[];
+  standards?: LinkedTreeDocument[];
 }
 
 export interface LinkedTreeDocument {
