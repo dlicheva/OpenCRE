@@ -67,11 +67,18 @@ export const Explorer = () => {
     }
     const contains = item.links.filter((x) => x.ltype === 'Contains');
     const linkedTo = item.links.filter((x) => x.ltype === 'Linked To');
+
+    const truncatedDisplayName = item.displayName.replace('CRE : ', '');
+    const creCode = truncatedDisplayName.split(' : ')[0];
+    const creName = truncatedDisplayName.split(' : ')[1];
     return (
       <List.Item key={Math.random()}>
         <List.Content>
           <List.Header>
-            <Link to={item.url}>{applyHighlight(item.displayName, filter)}</Link>
+            <Link to={item.url}>
+              <span className="cre-code">{applyHighlight(creCode, filter)}:</span>
+              <span className="cre-name">{applyHighlight(creName, filter)}</span>
+            </Link>
           </List.Header>
           {linkedTo.length > 0 && (
             <List.Description>
@@ -105,16 +112,17 @@ export const Explorer = () => {
           A visual explorer of Open Common Requirement Enumerations (CREs). Originally created by:{' '}
           <a target="_blank" href="https://zeljkoobrenovic.github.io/opencre-explorer/">
             Zeljko Obrenovic
-          </a>.
+          </a>
+          .
         </p>
 
         <div id="explorer-wrapper">
-          <div className='search-field'>
+          <div className="search-field">
             <input id="filter" type="text" placeholder="Search..." onKeyUp={update} />
             <div id="search-summary"></div>
           </div>
           <div id="graphs-menu">
-            <h4 className='menu-title'>Explore visually:</h4>
+            <h4 className="menu-title">Explore visually:</h4>
             <ul>
               <li>
                 <a href="/explorer/force_graph">Dependency Graph</a>
