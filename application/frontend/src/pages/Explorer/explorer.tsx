@@ -12,6 +12,8 @@ export const Explorer = () => {
   const { dataLoading, dataTree } = useDataStore();
   const [filter, setFilter] = useState('');
   const [filteredTree, setFilteredTree] = useState<TreeDocument[]>();
+  const [collapsedItems, setCollapsedItems] = useState<string[]>([]);
+
   const applyHighlight = (text, term) => {
     if (!term) return text;
     let index = text.toLowerCase().indexOf(term);
@@ -27,8 +29,7 @@ export const Explorer = () => {
     return text;
   };
 
-  const filterFunc = (doc: TreeDocument, term: string) =>
-    doc.displayName && doc.displayName.toLowerCase().includes(term);
+  const filterFunc = (doc: TreeDocument, term: string) => doc?.displayName?.toLowerCase().includes(term);
   const recursiveFilter = (doc: TreeDocument, term: string) => {
     if (doc.links) {
       const filteredLinks: LinkedTreeDocument[] = [];
@@ -44,6 +45,16 @@ export const Explorer = () => {
       return doc;
     }
     return null;
+  };
+
+  const isCollapsed = (id: string) => collapsedItems.includes(id);
+
+  const toggleItem = (id: string) => {
+    if (collapsedItems.includes(id)) {
+      setCollapsedItems(collapsedItems.filter((itemId) => itemId !== id));
+    } else {
+      setCollapsedItems([...collapsedItems, id]);
+    }
   };
 
   useEffect(() => {
@@ -75,6 +86,14 @@ export const Explorer = () => {
       <List.Item key={Math.random()}>
         <List.Content>
           <List.Header>
+            {contains.length > 0 && (
+              <div
+                className={`arrow ${isCollapsed(item.id) ? '' : 'active'}`}
+                onClick={() => toggleItem(item.id)}
+              >
+                <i aria-hidden="true" className="dropdown icon"></i>
+              </div>
+            )}
             <Link to={item.url}>
               <span className="cre-code">{applyHighlight(creCode, filter)}:</span>
               <span className="cre-name">{applyHighlight(creName, filter)}</span>
@@ -93,7 +112,7 @@ export const Explorer = () => {
               </Label.Group>
             </List.Description>
           )}
-          {contains.length > 0 && (
+          {contains.length > 0 && !isCollapsed(item.id) && (
             <List.List>{contains.map((child) => processNode(child.document))}</List.List>
           )}
         </List.Content>
