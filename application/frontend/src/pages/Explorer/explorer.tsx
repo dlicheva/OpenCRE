@@ -26,18 +26,9 @@ export const Explorer = () => {
         }
       });
       doc.links = filteredLinks;
-    } else if (doc.standards) {
-      const filteredStandards: LinkedTreeDocument[] = [];
-      doc.standards.forEach((x) => {
-        const filteredStd = recursiveFilter(x.document, term);
-        if (filterFunc(x.document, term) || filteredStd) {
-          filteredStandards.push({ ltype: x.ltype, document: filteredStd || x.document });
-        }
-      });
-      doc.standards = filteredStandards;
     }
 
-    if (filterFunc(doc, term) || doc.links?.length || doc.standards?.length) {
+    if (filterFunc(doc, term) || doc.links?.length) {
       return doc; // Return the document if it or any of its children (links or standards) matches the term
     }
     return null; // Return null if the document and its descendants do not match the term
@@ -89,7 +80,7 @@ export const Explorer = () => {
       return <></>;
     }
     const contains = item.links.filter((x) => x.ltype === 'Contains');
-    const linkedTo = item.standards ?? [];
+    const linkedTo = item.links.filter((x) => x.ltype === 'Linked To');
 
     const creCode = item.id;
     const creName = item.displayName.split(' : ').pop();
