@@ -12,6 +12,20 @@ export const Explorer = () => {
   const { dataLoading, dataTree } = useDataStore();
   const [filter, setFilter] = useState('');
   const [filteredTree, setFilteredTree] = useState<TreeDocument[]>();
+  const applyHighlight = (text, term) => {
+    if (!term) return text;
+    let index = text.toLowerCase().indexOf(term);
+    if (index >= 0) {
+      return (
+        <>
+          {text.substring(0, index)}
+          <span className="highlight">{text.substring(index, index + term.length)}</span>
+          {text.substring(index + term.length)}
+        </>
+      );
+    }
+    return text;
+  };
 
   const filterFunc = (doc: TreeDocument, term: string) =>
     doc?.displayName?.toLowerCase().includes(term) || doc?.name?.toLowerCase().includes(term);
@@ -32,21 +46,6 @@ export const Explorer = () => {
       return doc; // Return the document if it or any of its children (links or standards) matches the term
     }
     return null; // Return null if the document and its descendants do not match the term
-  };
-
-  const applyHighlight = (text, term) => {
-    if (!term) return text;
-    let index = text.toLowerCase().indexOf(term);
-    if (index >= 0) {
-      return (
-        <>
-          {text.substring(0, index)}
-          <span className="highlight">{text.substring(index, index + term.length)}</span>
-          {text.substring(index + term.length)}
-        </>
-      );
-    }
-    return text;
   };
 
   //accordion
