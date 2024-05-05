@@ -79,9 +79,8 @@ export const Explorer = () => {
     const contains = item.links.filter((x) => x.ltype === 'Contains');
     const linkedTo = item.links.filter((x) => x.ltype === 'Linked To');
 
-    const truncatedDisplayName = item.displayName.replace('CRE : ', '');
-    const creCode = truncatedDisplayName.split(' : ')[0];
-    const creName = truncatedDisplayName.split(' : ')[1];
+    const creCode = item.id;
+    const creName = item.displayName.split(' : ').pop();
     return (
       <List.Item key={Math.random()}>
         <List.Content>
